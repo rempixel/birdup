@@ -23,13 +23,18 @@ object ServerHelper {
             callback(null, IOException("Audio file not found"))
             return
         }
+        var year = date.get("year")
+        var month = date.get("month")
+        var day = date.get("day")
 
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("audio_file", file.name, file.asRequestBody())
             .addFormDataPart("lat", lat.toString())
             .addFormDataPart("lon", lon.toString())
-            .addFormDataPart("date", date.toString())
+            .addFormDataPart("year", year.toString())
+            .addFormDataPart("month", month.toString())
+            .addFormDataPart("day", day.toString())
             .addFormDataPart("min_conf", minConf.toString())
             .build()
 
