@@ -100,7 +100,7 @@ class AudioRecordTest : AppCompatActivity() {
         recorder = null
     }
 
-    internal inner class RecordButton(ctx: Context) : Button(ctx) {
+    internal inner class RecordButton(ctx: Context) : androidx.appcompat.widget.AppCompatButton(ctx) {
 
         var mStartRecording = true
 
@@ -119,7 +119,7 @@ class AudioRecordTest : AppCompatActivity() {
         }
     }
 
-    internal inner class PlayButton(ctx: Context) : Button(ctx) {
+    internal inner class PlayButton(ctx: Context) : androidx.appcompat.widget.AppCompatButton(ctx) {
         var mStartPlaying = true
         var clicker: OnClickListener = OnClickListener {
             onPlay(mStartPlaying)
