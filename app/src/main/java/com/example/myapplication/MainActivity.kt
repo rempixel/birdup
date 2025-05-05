@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
         // Request location permissions
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
 
-        fileName = "${externalCacheDir?.absolutePath}/audiorecordtest.3gp"
+        fileName = "${externalCacheDir?.absolutePath}/audiorecordtest.mp4"
 
         setContent {
             MyApplicationTheme {
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
     private fun startRecording() {
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setOutputFile(fileName)
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 
