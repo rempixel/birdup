@@ -56,7 +56,7 @@ fun LogBookScreen() {
 fun BottomSheet( uiState  : UiState,
                  modifier : Modifier,
                  location : (value: String) -> Unit,
-                 date     : (value: String) -> Unit) {
+                 date     : (value: String) -> Unit ) {
 
 
 }
