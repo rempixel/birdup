@@ -28,14 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import android.widget.ScrollView
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import androidx.core.view.setPadding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 private const val EXTRA_BIRD_LIST = "com.example.myapplication.bird_list"
 class LogBookActivity : AppCompatActivity() {
