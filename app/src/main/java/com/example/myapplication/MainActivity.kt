@@ -2,6 +2,9 @@ package com.example.myapplication
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Instrumentation.ActivityResult
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
@@ -11,17 +14,24 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +52,22 @@ private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
 class MainActivity : ComponentActivity() {
     private var recorder: MediaRecorder? = null
     private var fileName: String = ""
+
+    private val birdViewModel : BirdViewModel by viewModels()
+
+    private val logBookLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        result ->
+        if (result.resultCode == Activity.RESULT_OK)
+        {
+
+        }
+    }
+
+    fun launchLogBookActivity (intent : Intent) {
+        logBookLauncher.launch(intent)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,7 +156,7 @@ class MainActivity : ComponentActivity() {
                             Toast.makeText(this@MainActivity, "Error: ${error.message}", Toast.LENGTH_LONG).show()
                         } else {
                             Toast.makeText(this@MainActivity, "Response: $response", Toast.LENGTH_LONG).show()
-                            // Handle the JSON response here if needed
+                            // Handle the JSON   response here if needed
                         }
                     }
                 }
@@ -186,13 +212,32 @@ fun DemoScreen(
                 Text(if (isRecording) "Stop Recording" else "Start Recording")
             }
         }
+        Column (modifier = Modifier.padding(16.dp)) {
+            Spacer (modifier = Modifier.height(16.dp))
+
+        }
     }
 }
 
 // For logging what birds you have seen
 @Composable
-fun LogBookScreen() {
+fun LogBookScreen(
+    modifier: Modifier,
+    mainActivity: MainActivity,
+    birdViewModel: BirdViewModel,
+    onLaunchLogBook : (Intent) -> Unit
+) {
+    Row {
+        Button (
+            onClick = {
+                val birdsInYard = birdViewModel.birdsInYard
+                val intent = LogBookActivity.newIntent(mainActivity, birdsInYard)
+                onLaunchLogBook(intent)
+            },
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
 
+        )
+    }
 }
 
 // Recording setting adjustment
@@ -208,12 +253,8 @@ fun BottomSheet(
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        DemoScreen(
-            onStartRecording = {},
-            onStopRecording = {},
-            checkPermission = { true }
-        )
-    }
+fun ApplicationTheme() {
+
 }
+
+

@@ -35,7 +35,6 @@ object ServerHelper {
             .addFormDataPart("year", year.toString())
             .addFormDataPart("month", month.toString())
             .addFormDataPart("day", day.toString())
-            .addFormDataPart("min_conf", minConf.toString())
             .build()
 
         val request = Request.Builder()
