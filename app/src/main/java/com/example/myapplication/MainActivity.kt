@@ -42,6 +42,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.room.Room
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +59,8 @@ class MainActivity : ComponentActivity() {
     private var fileName: String = ""
 
     private val birdViewModel : BirdViewModel by viewModels()
+
+    private lateinit var database: AppDatabase
 
     private val logBookLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -81,6 +84,12 @@ class MainActivity : ComponentActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
 
         fileName = "${externalCacheDir?.absolutePath}/audiorecordtest.mp4"
+
+        database = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "bird_database"
+        ).build()
 
         setContent {
             MyApplicationTheme {
