@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,6 +59,8 @@ class MainActivity : ComponentActivity() {
     private var fileName: String = ""
 
     private val birdViewModel : BirdViewModel by viewModels()
+
+    private var birdsInYard = ArrayList<String>()
 
     private val logBookLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -84,44 +87,38 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                MyApplicationTheme {
+                Box(modifier = Modifier.fillMaxSize()) {
+
                     Box(modifier = Modifier.fillMaxSize()) {
-
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            Image(
-                                painter = painterResource(id = R.drawable.yardcropped),
-                                contentDescription = "Neko Atsume Yard for Placeholder",
-                                contentScale = ContentScale.FillHeight,
-                                modifier = Modifier.matchParentSize()
-                            )
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(16.dp)
-                        ) {
-                            Button(
-                                onClick = {
-                                    val birdsInYard = birdViewModel.birdsInYard
-                                    val intent = LogBookActivity.newIntent(this@MainActivity, birdsInYard)
-                                    launchLogBookActivity(intent)
-                                },
-                                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-                            ) {
-                                Text("Log Book")
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            RecordingButton(
-                                checkPermission  = {checkAudioPermission()},
-                                onStartRecording = {startRecording()},
-                                onStopRecording  = {stopRecording()}
-                            )
-                        }
+                        Image(
+                            painter = painterResource(id = R.drawable.yardcropped),
+                            contentDescription = "Neko Atsume Yard for Placeholder",
+                            contentScale = ContentScale.FillHeight,
+                            modifier = Modifier.matchParentSize()
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(16.dp)
+                    ) {
+                        LogBookScreen(
+                            modifier = Modifier,
+                            mainActivity = this@MainActivity,
+                            birdViewModel= birdViewModel,
+                            onLaunchLogBook = {intent -> launchLogBookActivity(intent)}
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        RecordingButton(
+                            checkPermission  = {checkAudioPermission()},
+                            onStartRecording = {startRecording()},
+                            onStopRecording  = {stopRecording()},
+                        )
                     }
                 }
             }
         }
+
     }
 
     private fun startRecording() {
@@ -191,7 +188,11 @@ class MainActivity : ComponentActivity() {
                             Toast.makeText(this@MainActivity, "Error: ${error.message}", Toast.LENGTH_LONG).show()
                         } else {
                             Toast.makeText(this@MainActivity, "Response: $response", Toast.LENGTH_LONG).show()
-                            // Handle the JSON   response here if needed
+                            if(response!= "[]"){
+                                birdsInYard.add((response.toString().split(":")[1]).split(",")[0])
+                                System.out.println(birdsInYard)
+                                birdViewModel.birdsInYard = birdsInYard
+                            }
                         }
                     }
                 }
@@ -248,9 +249,6 @@ fun RecordingButton(
         }
     }
 
-
-
-
 // For logging what birds you have seen
 @Composable
 fun LogBookScreen(
@@ -260,6 +258,7 @@ fun LogBookScreen(
     onLaunchLogBook : (Intent) -> Unit
 ) {
     Row {
+        val context = LocalContext.current
         Button (
             onClick = {
                 val birdsInYard = birdViewModel.birdsInYard
