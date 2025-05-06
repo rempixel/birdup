@@ -103,11 +103,13 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(
                                 onClick = {
-
+                                    val birdsInYard = birdViewModel.birdsInYard
+                                    val intent = LogBookActivity.newIntent(this@MainActivity, birdsInYard)
+                                    launchLogBookActivity(intent)
                                 },
                                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                             ) {
-                                Text("Button 1")
+                                Text("Log Book")
                             }
                             Spacer(modifier = Modifier.width(8.dp))
                             RecordingButton(
