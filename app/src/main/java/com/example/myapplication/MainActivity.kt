@@ -38,6 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -235,8 +237,9 @@ fun LogBookScreen(
                 onLaunchLogBook(intent)
             },
             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-
-        )
+        ){
+            Text("Log Book")
+        }
     }
 }
 
@@ -254,7 +257,18 @@ fun BottomSheet(
 @Preview(showBackground = true)
 @Composable
 fun ApplicationTheme() {
+    MyApplicationTheme {
+        Column {
+            LogBookScreen(
+                modifier = Modifier,
+                mainActivity = MainActivity(),
+                birdViewModel = BirdViewModel(savedStateHandle = SavedStateHandle()),
+                onLaunchLogBook = {}
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
+        }
+    }
 }
 
 
