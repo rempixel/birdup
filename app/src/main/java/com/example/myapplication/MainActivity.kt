@@ -196,7 +196,7 @@ class MainActivity : ComponentActivity() {
                             Toast.makeText(this@MainActivity, "Error: ${error.message}", Toast.LENGTH_LONG).show()
                         } else {
                             Toast.makeText(this@MainActivity, "Response: $response", Toast.LENGTH_LONG).show()
-                            if(response!= "[]"){
+                            if(response!="[]\n"){
                                 birdsInYard.add((response.toString().split(":")[1]).split(",")[0])
                                 System.out.println(birdsInYard)
                                 birdViewModel.birdsInYard = birdsInYard
