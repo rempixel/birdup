@@ -1,6 +1,8 @@
-*.DS_store
 .gradle/
 .idea/
 .kotlin/
-build
+build/
 local.properties
+workspace.xml
+
+*.DS_store

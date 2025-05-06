@@ -9,17 +9,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Bird::class], version = 2)
+@Database(entities = [Bird::class], version = 4)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun birdDao(): BirdDao
 
     fun populateWithSampleData() {
         CoroutineScope(Dispatchers.IO).launch {
             val birdDao = birdDao()
-            birdDao.insertOrUpdateBird(Bird(species = "Sparrow", count = 1))
-            birdDao.insertOrUpdateBird(Bird(species = "Robin", count = 1))
-            birdDao.insertOrUpdateBird(Bird(species = "Blue Jay", count = 1))
-            birdDao.insertOrUpdateBird(Bird(species = "Cardinal", count = 1))
+            birdDao.insertOrUpdateBird(Bird(species = "Sparrow", count = 1, imageResId = 0))
+            birdDao.insertOrUpdateBird(Bird(species = "Robin", count = 1, imageResId = 0))
+            birdDao.insertOrUpdateBird(Bird(species = "Blue Jay", count = 1, imageResId = R.drawable.bird4))
+            birdDao.insertOrUpdateBird(Bird(species = "Cardinal", count = 1, imageResId = R.drawable.bird3))
+        }
+    }
+
+    fun addSeenBirdToDB(birdInfo : LogBookActivity.BirdResource) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val birdDao = birdDao()
+            birdDao.insertOrUpdateBird(Bird(species=birdInfo.name, count = 1, imageResId = birdInfo.imageResId))
         }
     }
 
