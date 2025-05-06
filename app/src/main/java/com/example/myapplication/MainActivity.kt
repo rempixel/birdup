@@ -24,12 +24,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -82,11 +84,40 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                DemoScreen(
-                    onStartRecording = { startRecording() },
-                    onStopRecording = { stopRecording() },
-                    checkPermission = { checkAudioPermission() }
-                )
+                MyApplicationTheme {
+                    Box(modifier = Modifier.fillMaxSize()) {
+
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Image(
+                                painter = painterResource(id = R.drawable.yardcropped),
+                                contentDescription = "Neko Atsume Yard for Placeholder",
+                                contentScale = ContentScale.FillHeight,
+                                modifier = Modifier.matchParentSize()
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(16.dp)
+                        ) {
+                            Button(
+                                onClick = {
+
+                                },
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                            ) {
+                                Text("Button 1")
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            RecordingButton(
+                                checkPermission  = {checkAudioPermission()},
+                                onStartRecording = {startRecording()},
+                                onStopRecording  = {stopRecording()}
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -190,36 +221,33 @@ fun DemoScreen(
     onStopRecording: () -> Unit,
     checkPermission: () -> Boolean
 ) {
+
+}
+
+@Composable
+fun RecordingButton(
+    checkPermission  : () -> Boolean,
+    onStartRecording : () -> Unit,
+    onStopRecording  : () -> Unit
+) {
     var isRecording by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.yardcropped),
-            contentDescription = "Neko Atsume Yard for Placeholder",
-            contentScale = ContentScale.FillHeight,
-            modifier = Modifier.matchParentSize()
-        )
-        Column(modifier = Modifier.padding(16.dp)) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {
-                if (checkPermission()) {
-                    if (isRecording) {
-                        onStopRecording()
-                    } else {
-                        onStartRecording()
-                    }
-                    isRecording = !isRecording
+        Button(onClick = {
+            if (checkPermission()) {
+                if (isRecording) {
+                    onStopRecording()
+                } else {
+                    onStartRecording()
                 }
-            }) {
-                Text(if (isRecording) "Stop Recording" else "Start Recording")
+                isRecording = !isRecording
             }
-        }
-        Column (modifier = Modifier.padding(16.dp)) {
-            Spacer (modifier = Modifier.height(16.dp))
-
+        }) {
+            Text(if (isRecording) "Stop Recording" else "Start Recording")
         }
     }
-}
+
+
+
 
 // For logging what birds you have seen
 @Composable
@@ -266,7 +294,6 @@ fun ApplicationTheme() {
                 onLaunchLogBook = {}
             )
             Spacer(modifier = Modifier.height(16.dp))
-
         }
     }
 }
